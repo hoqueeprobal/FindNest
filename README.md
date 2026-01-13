@@ -1,8 +1,7 @@
 # 🏷️ FindNest
 
 **FindNest** is a simple **console-based Lost and Found Registry** developed in **C++** while learning **different types of algorithms**.  
-It uses **Object-Oriented Programming (OOP) concepts** such as **Classes & Objects, Encapsulation, Abstraction, Operator Overloading and Modularity**.  
-The program lets users manage lost items by **adding, removing, and viewing them grouped by category** while practicing **C++ classes, vectors, and algorithms.**
+It uses **Object-Oriented Programming (OOP) concepts** such as **Classes & Objects, Encapsulation, Abstraction, Operator Overloading and Modularity**.The program lets users manage lost items by **adding, removing, and viewing them grouped by category** while practicing **C++ classes, vectors, and algorithms.**
 
 ---
 
