@@ -22,27 +22,23 @@ public:
 
     Item() : id(0), name(""), category(""), foundLocation("") {}
 
-    int getId() const
-    {
-        return id;
+    int getId() const { 
+        return id; 
+        
+    }
+    string getName() const { 
+        return name; 
+        
+    }
+    string getCategory() const { 
+        return category; 
+        
+    }
+    string getFoundLocation() const { 
+        return foundLocation; 
+        
     }
 
-    string getName() const
-    {
-        return name;
-    }
-
-    string getCategory() const
-    {
-        return category;
-    }
-
-    string getFoundLocation() const
-    {
-        return foundLocation;
-    }
-
-    // Comparison operator to sort items by category
     bool operator<(const Item &other) const
     {
         return category < other.category;
@@ -54,7 +50,17 @@ class LostFoundRegistry
 private:
     vector<Item> items;
 
-    // Merge two sorted halves of the vector
+    // Checks whether the given ID already exists
+    bool idExists(int id) const
+    {
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (items[i].getId() == id)
+                return true;
+        }
+        return false;
+    }
+
     void merge(vector<Item> &arr, int left, int mid, int right)
     {
         int n1 = mid - left + 1;
@@ -71,34 +77,18 @@ private:
         while (i < n1 && j < n2)
         {
             if (leftArr[i] < rightArr[j])
-            {
-                arr[k] = leftArr[i];
-                i++;
-            }
+                arr[k++] = leftArr[i++];
             else
-            {
-                arr[k] = rightArr[j];
-                j++;
-            }
-            k++;
+                arr[k++] = rightArr[j++];
         }
 
         while (i < n1)
-        {
-            arr[k] = leftArr[i];
-            i++;
-            k++;
-        }
+            arr[k++] = leftArr[i++];
 
         while (j < n2)
-        {
-            arr[k] = rightArr[j];
-            j++;
-            k++;
-        }
+            arr[k++] = rightArr[j++];
     }
-
-    // Recursive merge sort function to sort items by category
+   // Recursive merge sort function to sort items by category
     void mergeSort(vector<Item> &arr, int left, int right)
     {
         if (left < right)
@@ -111,15 +101,34 @@ private:
     }
 
 public:
-    // Add a new item to the registry
+    // Adds a new item and prevents duplicate ID entry
     void addItem()
     {
         int id;
         string name, category, foundLocation;
+        
+        while (true)
+        {
+            cout << "Enter ID: ";
+            cin >> id;
 
-        cout << "Enter ID: ";
-        cin >> id;
-        cin.ignore();
+            if (cin.fail())
+            {
+                cin.clear();
+                cin.ignore(100, '\n');
+                cout << "Invalid input. Enter numeric ID.\n";
+                continue;
+            }
+        // Duplicate ID check
+            if (idExists(id))
+            {
+                cout << "ID already exists, Please enter a different ID\n";
+                continue;
+            }
+
+            cin.ignore(100, '\n');
+            break;
+        }
 
         cout << "Enter Name: ";
         getline(cin, name);
@@ -130,13 +139,11 @@ public:
         cout << "Enter Found Location: ";
         getline(cin, foundLocation);
 
-        Item obj(id, name, category, foundLocation);
-        items.push_back(obj);
-
+        items.push_back(Item(id, name, category, foundLocation));
         cout << "Item added successfully!" << endl;
     }
-
-    // Remove an item from the registry by ID
+    
+// Removes an item using its ID
     void removeItem()
     {
         int id;
@@ -145,7 +152,7 @@ public:
         cout << "Enter ID to remove: ";
         cin >> id;
 
-        for (int i = 0; i < (int)items.size(); i++)
+        for (int i = 0; i < items.size(); i++)
         {
             if (items[i].getId() == id)
             {
@@ -160,8 +167,8 @@ public:
         else
             cout << "No item found with this ID." << endl;
     }
-
-    // Display all items grouped by category
+    
+// Displays all items grouped by category
     void displayAll()
     {
         if (items.empty())
