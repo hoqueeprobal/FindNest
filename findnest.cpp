@@ -22,22 +22,10 @@ public:
 
     Item() : id(0), name(""), category(""), foundLocation("") {}
 
-    int getId() const { 
-        return id; 
-        
-    }
-    string getName() const { 
-        return name; 
-        
-    }
-    string getCategory() const { return 
-    category; 
-        
-    }
-    string getFoundLocation() const { return 
-    foundLocation; 
-        
-    }
+    int getId() const { return id; }
+    string getName() const { return name; }
+    string getCategory() const { return category; }
+    string getFoundLocation() const { return foundLocation; }
 
     bool operator<(const Item &other) const
     {
@@ -127,7 +115,7 @@ public:
                 continue;
             }
 
-            cin.ignore(100, '\n'); 
+            cin.ignore(100, '\n');
             break;
         }
 
@@ -290,4 +278,4 @@ int main()
     } while (choice != 0);
 
     return 0;
-}  
+}
