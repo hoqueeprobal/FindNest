@@ -30,12 +30,12 @@ public:
         return name; 
         
     }
-    string getCategory() const { 
-        return category; 
+    string getCategory() const { return 
+    category; 
         
     }
-    string getFoundLocation() const { 
-        return foundLocation; 
+    string getFoundLocation() const { return 
+    foundLocation; 
         
     }
 
@@ -84,11 +84,11 @@ private:
 
         while (i < n1)
             arr[k++] = leftArr[i++];
-
         while (j < n2)
             arr[k++] = rightArr[j++];
     }
-   // Recursive merge sort function to sort items by category
+
+    // Recursive merge sort function to sort items by category
     void mergeSort(vector<Item> &arr, int left, int right)
     {
         if (left < right)
@@ -106,7 +106,7 @@ public:
     {
         int id;
         string name, category, foundLocation;
-        
+
         while (true)
         {
             cout << "Enter ID: ";
@@ -119,14 +119,15 @@ public:
                 cout << "Invalid input. Enter numeric ID.\n";
                 continue;
             }
-        // Duplicate ID check
+
+            // Duplicate ID check
             if (idExists(id))
             {
                 cout << "ID already exists, Please enter a different ID\n";
                 continue;
             }
 
-            cin.ignore(100, '\n');
+            cin.ignore(100, '\n'); 
             break;
         }
 
@@ -142,8 +143,8 @@ public:
         items.push_back(Item(id, name, category, foundLocation));
         cout << "Item added successfully!" << endl;
     }
-    
-// Removes an item using its ID
+
+    // Removes an item using its ID
     void removeItem()
     {
         int id;
@@ -151,6 +152,7 @@ public:
 
         cout << "Enter ID to remove: ";
         cin >> id;
+        cin.ignore(100, '\n');
 
         for (int i = 0; i < items.size(); i++)
         {
@@ -167,8 +169,48 @@ public:
         else
             cout << "No item found with this ID." << endl;
     }
-    
-// Displays all items grouped by category
+
+    // Updates item details except ID
+    void updateItem()
+    {
+        int id;
+        bool found = false;
+        string name, category, foundLocation;
+
+        cout << "Enter ID to update: ";
+        cin >> id;
+        cin.ignore(100, '\n');
+
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (items[i].getId() == id)
+            {
+                found = true;
+
+                cout << "Enter New Name: ";
+                getline(cin, name);
+
+                cout << "Enter New Category: ";
+                getline(cin, category);
+
+                cout << "Enter New Found Location: ";
+                getline(cin, foundLocation);
+
+                // ID is NOT changed
+                items[i] = Item(id, name, category, foundLocation);
+
+                cout << "Item updated successfully!" << endl;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            cout << "No item found with this ID." << endl;
+        }
+    }
+
+    // Displays all items grouped by category
     void displayAll()
     {
         if (items.empty())
@@ -209,6 +251,7 @@ int main()
         cout << "1. Add Item" << endl;
         cout << "2. Remove Item" << endl;
         cout << "3. Display All Items" << endl;
+        cout << "4. Update Item" << endl;
         cout << "0. Exit" << endl;
         cout << "Enter choice: ";
         cin >> choice;
@@ -222,19 +265,29 @@ int main()
         }
         else
         {
-            if (choice == 1)
+            switch (choice)
+            {
+            case 1:
                 registry.addItem();
-            else if (choice == 2)
+                break;
+            case 2:
                 registry.removeItem();
-            else if (choice == 3)
+                break;
+            case 3:
                 registry.displayAll();
-            else if (choice == 0)
+                break;
+            case 4:
+                registry.updateItem();
+                break;
+            case 0:
                 cout << "Exiting..." << endl;
-            else
+                break;
+            default:
                 cout << "Wrong choice. Try again." << endl;
+            }
         }
 
     } while (choice != 0);
 
     return 0;
-}
+} 
