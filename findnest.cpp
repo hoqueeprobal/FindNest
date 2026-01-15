@@ -22,10 +22,22 @@ public:
 
     Item() : id(0), name(""), category(""), foundLocation("") {}
 
-    int getId() const { return id; }
-    string getName() const { return name; }
-    string getCategory() const { return category; }
-    string getFoundLocation() const { return foundLocation; }
+    int getId() const { 
+        return id; 
+        
+    }
+    string getName() const { 
+        return name; 
+        
+    }
+    string getCategory() const { 
+        return category; 
+        
+    }
+    string getFoundLocation() const { return 
+    foundLocation; 
+        
+    }
 
     bool operator<(const Item &other) const
     {
@@ -115,7 +127,7 @@ public:
                 continue;
             }
 
-            cin.ignore(100, '\n');
+            cin.ignore(100, '\n'); // clear newline
             break;
         }
 
@@ -198,7 +210,7 @@ public:
         }
     }
 
-    // Displays all items grouped by category
+    // Displays all items grouped by category with total count per category
     void displayAll()
     {
         if (items.empty())
@@ -212,11 +224,18 @@ public:
 
         cout << "\n--- Items Grouped by Category ---" << endl;
         string currentCategory = "";
+        int categoryCount = 0;
 
         for (int i = 0; i < sortedItems.size(); i++)
         {
             if (sortedItems[i].getCategory() != currentCategory)
             {
+                if (categoryCount > 0)
+                {
+                    cout << "Total items in this category: " << categoryCount << endl;
+                    categoryCount = 0;
+                }
+
                 currentCategory = sortedItems[i].getCategory();
                 cout << "\nCategory: " << currentCategory << endl;
             }
@@ -224,7 +243,13 @@ public:
             cout << "ID: " << sortedItems[i].getId()
                  << " | Name: " << sortedItems[i].getName()
                  << " | Found Location: " << sortedItems[i].getFoundLocation() << endl;
+
+            categoryCount++;
         }
+
+        // Print count for last category
+        if (categoryCount > 0)
+            cout << "Total items in this category: " << categoryCount << endl;
     }
 };
 
@@ -278,4 +303,4 @@ int main()
     } while (choice != 0);
 
     return 0;
-}
+} 
