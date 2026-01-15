@@ -36,12 +36,6 @@ public:
     }
     string getFoundLocation() const { return 
     foundLocation; 
-    string getCategory() const { 
-        return category; 
-        
-    }
-    string getFoundLocation() const { 
-        return foundLocation; 
         
     }
 
@@ -90,11 +84,11 @@ private:
 
         while (i < n1)
             arr[k++] = leftArr[i++];
-
         while (j < n2)
             arr[k++] = rightArr[j++];
     }
-   // Recursive merge sort function to sort items by category
+
+    // Recursive merge sort function to sort items by category
     void mergeSort(vector<Item> &arr, int left, int right)
     {
         if (left < right)
@@ -112,11 +106,6 @@ public:
     {
         int id;
         string name, category, foundLocation;
-        
-        while (true)
-        {
-            cout << "Enter ID: ";
-            cin >> id;
 
         while (true)
         {
@@ -132,7 +121,6 @@ public:
             }
 
             // Duplicate ID check
-        // Duplicate ID check
             if (idExists(id))
             {
                 cout << "ID already exists, Please enter a different ID\n";
@@ -140,7 +128,6 @@ public:
             }
 
             cin.ignore(100, '\n'); 
-            cin.ignore(100, '\n');
             break;
         }
 
@@ -158,8 +145,6 @@ public:
     }
 
     // Removes an item using its ID
-    
-// Removes an item using its ID
     void removeItem()
     {
         int id;
@@ -226,8 +211,6 @@ public:
     }
 
     // Displays all items grouped by category
-    
-// Displays all items grouped by category
     void displayAll()
     {
         if (items.empty())
@@ -307,4 +290,4 @@ int main()
     } while (choice != 0);
 
     return 0;
-} 
+}  
