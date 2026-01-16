@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cctype>
 using namespace std;
 
 class Item
@@ -13,30 +14,21 @@ private:
 
 public:
     Item(int i, string n, string c, string f)
-    {
-        id = i;
-        name = n;
-        category = c;
-        foundLocation = f;
-    }
+        : id(i), name(n), category(c), foundLocation(f) {}
 
     Item() : id(0), name(""), category(""), foundLocation("") {}
-
+  
     int getId() const { 
-        return id; 
-        
+      return id; 
     }
     string getName() const { 
-        return name; 
-        
+      return name; 
     }
     string getCategory() const { 
-        return category; 
-        
+      return category; 
     }
     string getFoundLocation() const { 
-        return foundLocation; 
-        
+      return foundLocation; 
     }
 
     bool operator<(const Item &other) const
@@ -45,10 +37,12 @@ public:
     }
 };
 
+// Class to manage lost and found items
 class LostFoundRegistry
 {
 private:
     vector<Item> items;
+
     // Checks whether the given ID already exists
     bool idExists(int id) const
     {
@@ -60,6 +54,7 @@ private:
         return false;
     }
 
+    // Merges two sorted subarrays
     void merge(vector<Item> &arr, int left, int mid, int right)
     {
         int n1 = mid - left + 1;
@@ -73,6 +68,7 @@ private:
             rightArr[j] = arr[mid + 1 + j];
 
         int i = 0, j = 0, k = left;
+
         while (i < n1 && j < n2)
         {
             if (leftArr[i] < rightArr[j])
@@ -86,6 +82,7 @@ private:
         while (j < n2)
             arr[k++] = rightArr[j++];
     }
+
     // Recursive merge sort function to sort items by category
     void mergeSort(vector<Item> &arr, int left, int right)
     {
@@ -109,6 +106,7 @@ public:
         {
             cout << "Enter ID: ";
             cin >> id;
+
             if (cin.fail())
             {
                 cin.clear();
@@ -116,11 +114,13 @@ public:
                 cout << "Invalid input. Enter numeric ID.\n";
                 continue;
             }
+
             if (idExists(id))
             {
-                cout << "ID already exists, Please enter a different ID\n";
+                cout << "ID already exists. Please enter a different ID.\n";
                 continue;
             }
+
             cin.ignore(100, '\n');
             break;
         }
@@ -135,14 +135,13 @@ public:
         getline(cin, foundLocation);
 
         items.push_back(Item(id, name, category, foundLocation));
-        cout << "Item added successfully!" << endl;
+        cout << "Item added successfully!\n";
     }
+
     // Removes an item using its ID
     void removeItem()
     {
         int id;
-        bool found = false;
-
         cout << "Enter ID to remove: ";
         cin >> id;
         cin.ignore(100, '\n');
@@ -152,23 +151,17 @@ public:
             if (items[i].getId() == id)
             {
                 items.erase(items.begin() + i);
-                found = true;
-                break;
+                cout << "Item removed successfully!\n";
+                return;
             }
         }
-
-        if (found)
-            cout << "Item removed successfully!" << endl;
-        else
-            cout << "No item found with this ID." << endl;
+        cout << "No item found with this ID.\n";
     }
- // Updates item details except ID
+
+    // Updates item details except ID
     void updateItem()
     {
         int id;
-        bool found = false;
-        string name, category, foundLocation;
-
         cout << "Enter ID to update: ";
         cin >> id;
         cin.ignore(100, '\n');
@@ -177,7 +170,8 @@ public:
         {
             if (items[i].getId() == id)
             {
-                found = true;
+                string name, category, foundLocation;
+
                 cout << "Enter New Name: ";
                 getline(cin, name);
 
@@ -188,27 +182,27 @@ public:
                 getline(cin, foundLocation);
 
                 items[i] = Item(id, name, category, foundLocation);
-                cout << "Item updated successfully!" << endl;
-                break;
+                cout << "Item updated successfully!\n";
+                return;
             }
         }
-
-        if (!found)
-            cout << "No item found with this ID." << endl;
+        cout << "No item found with this ID.\n";
     }
- // Displays all items grouped by category with total count per category
+
+    // Displays all items grouped by category with total count per category
     void displayAll()
     {
         if (items.empty())
         {
-            cout << "No data found." << endl;
+            cout << "No data found.\n";
             return;
         }
 
         vector<Item> sortedItems = items;
         mergeSort(sortedItems, 0, sortedItems.size() - 1);
 
-        cout << "\n--- Items Grouped by Category ---" << endl;
+        cout << "\n--- Items Grouped by Category ---\n";
+
         string currentCategory = "";
         int categoryCount = 0;
 
@@ -218,41 +212,52 @@ public:
             {
                 if (categoryCount > 0)
                 {
-                    cout << "Total items in this category: " << categoryCount << endl;
-                    categoryCount = 0;
+                    cout << "Total items in this category: "
+                         << categoryCount << "\n";
                 }
+
                 currentCategory = sortedItems[i].getCategory();
-                cout << "\nCategory: " << currentCategory << endl;
+                cout << "\nCategory: " << currentCategory << "\n";
+                categoryCount = 0;
             }
 
             cout << "ID: " << sortedItems[i].getId()
                  << " | Name: " << sortedItems[i].getName()
-                 << " | Found Location: " << sortedItems[i].getFoundLocation() << endl;
+                 << " | Found Location: "
+                 << sortedItems[i].getFoundLocation() << "\n";
 
             categoryCount++;
         }
 
         if (categoryCount > 0)
-            cout << "Total items in this category: " << categoryCount << endl;
+            cout << "Total items in this category: "
+                 << categoryCount << "\n";
     }
 
-    // Search Items by ID or Name using Linear Search
+    // Searches item by ID or Name using Linear Search
     void searchItem()
     {
-        int choice;
-        cout << "\nSearch by: 1. ID  2. Name\nEnter choice: ";
-        cin >> choice;
-        cin.ignore(100, '\n');
-
+        string input;
         bool found = false;
 
-        if (choice == 1)
-        {
-            int id;
-            cout << "Enter ID to search: ";
-            cin >> id;
-            cin.ignore(100, '\n');
+        cout << "Enter Item ID or Name to search: ";
+        getline(cin, input);
 
+        // Check whether input is numeric (ID)
+        bool isNumber = true;
+        for (char c : input)
+        {
+            if (!isdigit(c))
+            {
+                isNumber = false;
+                break;
+            }
+        }
+
+        // Linear search by ID
+        if (isNumber)
+        {
+            int id = stoi(input);
             for (int i = 0; i < items.size(); i++)
             {
                 if (items[i].getId() == id)
@@ -262,38 +267,32 @@ public:
                     cout << "ID: " << items[i].getId()
                          << " | Name: " << items[i].getName()
                          << " | Category: " << items[i].getCategory()
-                         << " | Found Location: " << items[i].getFoundLocation() << endl;
+                         << " | Found Location: "
+                         << items[i].getFoundLocation() << "\n";
                     break;
                 }
             }
         }
-        else if (choice == 2)
+        // Linear search by Name
+        else
         {
-            string name;
-            cout << "Enter Name to search: ";
-            getline(cin, name);
-
             for (int i = 0; i < items.size(); i++)
             {
-                if (items[i].getName() == name)
+                if (items[i].getName() == input)
                 {
                     found = true;
                     cout << "Item Found!\n";
                     cout << "ID: " << items[i].getId()
                          << " | Name: " << items[i].getName()
                          << " | Category: " << items[i].getCategory()
-                         << " | Found Location: " << items[i].getFoundLocation() << endl;
+                         << " | Found Location: "
+                         << items[i].getFoundLocation() << "\n";
                 }
             }
         }
-        else
-        {
-            cout << "Invalid choice!" << endl;
-            return;
-        }
 
         if (!found)
-            cout << "No item found matching the search criteria." << endl;
+            cout << "No item found matching the search criteria.\n";
     }
 };
 
@@ -304,51 +303,42 @@ int main()
 
     do
     {
-        cout << "\n\t\t\t FindNest" << endl;
-        cout << "1. Add Item" << endl;
-        cout << "2. Remove Item" << endl;
-        cout << "3. Display All Items" << endl;
-        cout << "4. Update Item" << endl;
-        cout << "5. Search Item" << endl;
-        cout << "0. Exit" << endl;
+        cout << "\n\t\t\t FindNest\n";
+        cout << "1. Add Item\n";
+        cout << "2. Remove Item\n";
+        cout << "3. Display All Items\n";
+        cout << "4. Update Item\n";
+        cout << "5. Search Item\n";
+        cout << "0. Exit\n";
         cout << "Enter choice: ";
+
         cin >> choice;
+        cin.ignore(100, '\n');
 
-        if (cin.fail())
+        switch (choice)
         {
-            cin.clear();
-            cin.ignore(100, '\n');
-            cout << "Invalid input. Try again." << endl;
-            choice = -1;
+        case 1:
+            registry.addItem();
+            break;
+        case 2:
+            registry.removeItem();
+            break;
+        case 3:
+            registry.displayAll();
+            break;
+        case 4:
+            registry.updateItem();
+            break;
+        case 5:
+            registry.searchItem();
+            break;
+        case 0:
+            cout << "Exiting...\n";
+            break;
+        default:
+            cout << "Wrong choice. Try again.\n";
         }
-        else
-        {
-            switch (choice)
-            {
-            case 1:
-                registry.addItem();
-                break;
-            case 2:
-                registry.removeItem();
-                break;
-            case 3:
-                registry.displayAll();
-                break;
-            case 4:
-                registry.updateItem();
-                break;
-            case 5:
-                registry.searchItem();
-                break;
-            case 0:
-                cout << "Exiting..." << endl;
-                break;
-            default:
-                cout << "Wrong choice. Try again." << endl;
-            }
-        }
-
     } while (choice != 0);
 
     return 0;
-}
+} 
