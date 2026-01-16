@@ -1,69 +1,79 @@
 # 🏷️ FindNest
 
-**FindNest** is a simple **console-based Lost and Found Registry** developed in **C++** while learning **different types of algorithms**.  
-It uses **Object-Oriented Programming (OOP) concepts** such as **Classes & Objects, Encapsulation, Abstraction, Operator Overloading and Modularity**.The program lets users manage lost items by **adding, removing, and viewing them grouped by category** while practicing **C++ classes, vectors, and algorithms.**
+**FindNest** is a console-based **Lost and Found Registry System** developed in **C++** while learning **Object-Oriented Programming and Fundamental Algorithms**.  
+It allows users to manage lost items by adding, removing, updating, searching, and displaying them **grouped by category**.
 
 ---
 
 ## 🌟 Features
 
 ### 🔹 Core Features
-- Add lost items with **ID, Name, Category, and Found Location**.  
-- Remove items by **ID**.  
-- Display all items **grouped and sorted by category**.  
-- Maintain a **dynamic list of items** using vectors.  
+- Add lost items with **unique ID, Name, Category, and Found Location**
+- Remove and update items using **Item ID**
+- Display all items **grouped and sorted by category**
+- Search items by **ID or Name**
 
 ### 🔹 Utility Features
-- Menu-driven console interface for easy navigation.  
-- Handles invalid inputs gracefully.  
-- Merge sort used internally to **sort items by category**.  
+- Menu-driven console interface
+- Prevents duplicate IDs and handles invalid input
+- **Merge Sort** used for category-based sorting
+- **Linear Search** used for searching items
+- Automatically saves data to `lostfound-data.txt` on exit
 
 ---
 
 ## 🧩 OOP Concepts Used
 
-**Classes & Objects**  
-   - `Item` class represents a lost item with attributes like ID, Name, Category, and Found Location.  
-   - `LostFoundRegistry` class manages a collection of items and handles all operations (add, remove, display).
+### 🔹 Classes & Objects
+- `Item` class represents a lost item  
+- `LostFoundRegistry` class manages all item operations  
 
-**Encapsulation**  
-   - Data members (`id`, `name`, `category`, `foundLocation`) in `Item` are **private**.  
-   - Access is controlled using **public getter functions** (`getId()`, `getName()`, etc.).
+### 🔹 Encapsulation
+- Item data members are **private**
+- Accessed using **public getter methods**
 
-**Abstraction**  
-   - `LostFoundRegistry` exposes only **public methods** like `addItem()`, `removeItem()`, and `displayAll()` while hiding implementation details (like the vector and merge sort).
+### 🔹 Abstraction
+- Registry class exposes only **essential public methods**
+- Internal logic (sorting, searching, validation) is hidden
 
-**Operator Overloading**  
-   - The `<` operator is **overloaded** in `Item` to compare items by category for sorting.
+### 🔹 Operator Overloading
+- `<` operator is overloaded to compare items by **category**
 
-**Modularity**  
-   - Functions are divided logically into separate methods (adding, removing, displaying, sorting), making the code **organized and reusable**.
+### 🔹 Modularity
+- Program logic is divided into **well-structured functions**
+- Improves readability, reusability, and maintenance
 
 ---
 
 ## 💻 Technologies Used
-- **Language:** C++  
-- **Compiler:** GCC, MinGW, or any standard C++ compiler  
-- **Interface:** Console (Text-based)  
-- **Data Structures:** Vector (dynamic array), custom classes  
-- **Algorithm:** Merge Sort  
+- **Language:** C++
+- **Interface:** Console (Text-based)
+- **Data Structures:** Vector
+- **Algorithms:** Merge Sort, Linear Search
+- **File Handling:** fstream
 
 ---
 
 ## 📂 Folder Structure
-
 ```plaintext
 FindNest/
 ├── README.md
 ├── Project-Documents/
 ├── FindNest.cpp
-
 ```
 ---
+## 🚀 How to Run
+
+1. Compile the program:
+   ```bash
+   g++ findnest.cpp -o FindNest
+2. Run the executable:
+      ```bash
+   ./FindNest
+
+      
 ## 🎉 Acknowledgments
 
 - Developed while learning and practicing different types of algorithms in C++.  
 - Thanks to **Faculty and Team Mates** who helped **review and improve** this project.  
-
-Happy Learning with **FindNest**! 🌟
 ---
