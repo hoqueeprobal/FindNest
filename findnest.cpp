@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <cctype>
+#include <fstream> 
 using namespace std;
 
 class Item
@@ -17,18 +18,18 @@ public:
         : id(i), name(n), category(c), foundLocation(f) {}
 
     Item() : id(0), name(""), category(""), foundLocation("") {}
-  
+
     int getId() const { 
-      return id; 
+        return id; 
     }
     string getName() const { 
-      return name; 
+        return name; 
     }
     string getCategory() const { 
-      return category; 
+        return category; 
     }
     string getFoundLocation() const { 
-      return foundLocation; 
+        return foundLocation; 
     }
 
     bool operator<(const Item &other) const
@@ -37,7 +38,6 @@ public:
     }
 };
 
-// Class to manage lost and found items
 class LostFoundRegistry
 {
 private:
@@ -54,7 +54,7 @@ private:
         return false;
     }
 
-    // Merges two sorted subarrays
+    // Merge function for merge sort
     void merge(vector<Item> &arr, int left, int mid, int right)
     {
         int n1 = mid - left + 1;
@@ -68,7 +68,6 @@ private:
             rightArr[j] = arr[mid + 1 + j];
 
         int i = 0, j = 0, k = left;
-
         while (i < n1 && j < n2)
         {
             if (leftArr[i] < rightArr[j])
@@ -83,7 +82,7 @@ private:
             arr[k++] = rightArr[j++];
     }
 
-    // Recursive merge sort function to sort items by category
+    // Recursive merge sort
     void mergeSort(vector<Item> &arr, int left, int right)
     {
         if (left < right)
@@ -189,7 +188,7 @@ public:
         cout << "No item found with this ID.\n";
     }
 
-    // Displays all items grouped by category with total count per category
+    // Displays all items grouped by category
     void displayAll()
     {
         if (items.empty())
@@ -212,8 +211,7 @@ public:
             {
                 if (categoryCount > 0)
                 {
-                    cout << "Total items in this category: "
-                         << categoryCount << "\n";
+                    cout << "Total items in this category: " << categoryCount << "\n";
                 }
 
                 currentCategory = sortedItems[i].getCategory();
@@ -223,15 +221,13 @@ public:
 
             cout << "ID: " << sortedItems[i].getId()
                  << " | Name: " << sortedItems[i].getName()
-                 << " | Found Location: "
-                 << sortedItems[i].getFoundLocation() << "\n";
+                 << " | Found Location: " << sortedItems[i].getFoundLocation() << "\n";
 
             categoryCount++;
         }
 
         if (categoryCount > 0)
-            cout << "Total items in this category: "
-                 << categoryCount << "\n";
+            cout << "Total items in this category: " << categoryCount << "\n";
     }
 
     // Searches item by ID or Name using Linear Search
@@ -267,8 +263,7 @@ public:
                     cout << "ID: " << items[i].getId()
                          << " | Name: " << items[i].getName()
                          << " | Category: " << items[i].getCategory()
-                         << " | Found Location: "
-                         << items[i].getFoundLocation() << "\n";
+                         << " | Found Location: " << items[i].getFoundLocation() << "\n";
                     break;
                 }
             }
@@ -285,14 +280,63 @@ public:
                     cout << "ID: " << items[i].getId()
                          << " | Name: " << items[i].getName()
                          << " | Category: " << items[i].getCategory()
-                         << " | Found Location: "
-                         << items[i].getFoundLocation() << "\n";
+                         << " | Found Location: " << items[i].getFoundLocation() << "\n";
                 }
             }
         }
 
         if (!found)
             cout << "No item found matching the search criteria.\n";
+    }
+
+    // Saves all items to a file grouped by category
+    void saveToFileByCategory()
+    {
+        if (items.empty())
+        {
+            cout << "No data to save.\n";
+            return;
+        }
+
+        ofstream outFile("lostfound-data.txt"); // Open file for writing
+        if (!outFile)
+        {
+            cout << "Error opening file for saving!\n";
+            return;
+        }
+
+        vector<Item> sortedItems = items;
+        mergeSort(sortedItems, 0, sortedItems.size() - 1);
+
+        string currentCategory = "";
+        int categoryCount = 0;
+
+        for (int i = 0; i < sortedItems.size(); i++)
+        {
+            if (sortedItems[i].getCategory() != currentCategory)
+            {
+                if (categoryCount > 0)
+                {
+                    outFile << "Total items in this category: " << categoryCount << "\n\n";
+                    categoryCount = 0;
+                }
+
+                currentCategory = sortedItems[i].getCategory();
+                outFile << "Category: " << currentCategory << "\n";
+            }
+
+            outFile << "ID: " << sortedItems[i].getId()
+                    << " | Name: " << sortedItems[i].getName()
+                    << " | Found Location: " << sortedItems[i].getFoundLocation() << "\n";
+
+            categoryCount++;
+        }
+
+        if (categoryCount > 0)
+            outFile << "Total items in this category: " << categoryCount << "\n";
+
+        outFile.close();
+        cout << "All data saved successfully to lostfound-data.txt!\n";
     }
 };
 
@@ -333,12 +377,14 @@ int main()
             registry.searchItem();
             break;
         case 0:
+            registry.saveToFileByCategory();
             cout << "Exiting...\n";
             break;
         default:
             cout << "Wrong choice. Try again.\n";
         }
+
     } while (choice != 0);
 
     return 0;
-} 
+}
