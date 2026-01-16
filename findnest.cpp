@@ -34,8 +34,8 @@ public:
         return category; 
         
     }
-    string getFoundLocation() const { return 
-    foundLocation; 
+    string getFoundLocation() const { 
+        return foundLocation; 
         
     }
 
@@ -49,7 +49,6 @@ class LostFoundRegistry
 {
 private:
     vector<Item> items;
-
     // Checks whether the given ID already exists
     bool idExists(int id) const
     {
@@ -87,7 +86,6 @@ private:
         while (j < n2)
             arr[k++] = rightArr[j++];
     }
-
     // Recursive merge sort function to sort items by category
     void mergeSort(vector<Item> &arr, int left, int right)
     {
@@ -111,7 +109,6 @@ public:
         {
             cout << "Enter ID: ";
             cin >> id;
-
             if (cin.fail())
             {
                 cin.clear();
@@ -119,15 +116,12 @@ public:
                 cout << "Invalid input. Enter numeric ID.\n";
                 continue;
             }
-
-            // Duplicate ID check
             if (idExists(id))
             {
                 cout << "ID already exists, Please enter a different ID\n";
                 continue;
             }
-
-            cin.ignore(100, '\n'); // clear newline
+            cin.ignore(100, '\n');
             break;
         }
 
@@ -143,7 +137,6 @@ public:
         items.push_back(Item(id, name, category, foundLocation));
         cout << "Item added successfully!" << endl;
     }
-
     // Removes an item using its ID
     void removeItem()
     {
@@ -169,8 +162,7 @@ public:
         else
             cout << "No item found with this ID." << endl;
     }
-
-    // Updates item details except ID
+ // Updates item details except ID
     void updateItem()
     {
         int id;
@@ -186,7 +178,6 @@ public:
             if (items[i].getId() == id)
             {
                 found = true;
-
                 cout << "Enter New Name: ";
                 getline(cin, name);
 
@@ -196,21 +187,16 @@ public:
                 cout << "Enter New Found Location: ";
                 getline(cin, foundLocation);
 
-                // ID is NOT changed
                 items[i] = Item(id, name, category, foundLocation);
-
                 cout << "Item updated successfully!" << endl;
                 break;
             }
         }
 
         if (!found)
-        {
             cout << "No item found with this ID." << endl;
-        }
     }
-
-    // Displays all items grouped by category with total count per category
+ // Displays all items grouped by category with total count per category
     void displayAll()
     {
         if (items.empty())
@@ -235,7 +221,6 @@ public:
                     cout << "Total items in this category: " << categoryCount << endl;
                     categoryCount = 0;
                 }
-
                 currentCategory = sortedItems[i].getCategory();
                 cout << "\nCategory: " << currentCategory << endl;
             }
@@ -247,9 +232,68 @@ public:
             categoryCount++;
         }
 
-        // Print count for last category
         if (categoryCount > 0)
             cout << "Total items in this category: " << categoryCount << endl;
+    }
+
+    // Search Items by ID or Name using Linear Search
+    void searchItem()
+    {
+        int choice;
+        cout << "\nSearch by: 1. ID  2. Name\nEnter choice: ";
+        cin >> choice;
+        cin.ignore(100, '\n');
+
+        bool found = false;
+
+        if (choice == 1)
+        {
+            int id;
+            cout << "Enter ID to search: ";
+            cin >> id;
+            cin.ignore(100, '\n');
+
+            for (int i = 0; i < items.size(); i++)
+            {
+                if (items[i].getId() == id)
+                {
+                    found = true;
+                    cout << "Item Found!\n";
+                    cout << "ID: " << items[i].getId()
+                         << " | Name: " << items[i].getName()
+                         << " | Category: " << items[i].getCategory()
+                         << " | Found Location: " << items[i].getFoundLocation() << endl;
+                    break;
+                }
+            }
+        }
+        else if (choice == 2)
+        {
+            string name;
+            cout << "Enter Name to search: ";
+            getline(cin, name);
+
+            for (int i = 0; i < items.size(); i++)
+            {
+                if (items[i].getName() == name)
+                {
+                    found = true;
+                    cout << "Item Found!\n";
+                    cout << "ID: " << items[i].getId()
+                         << " | Name: " << items[i].getName()
+                         << " | Category: " << items[i].getCategory()
+                         << " | Found Location: " << items[i].getFoundLocation() << endl;
+                }
+            }
+        }
+        else
+        {
+            cout << "Invalid choice!" << endl;
+            return;
+        }
+
+        if (!found)
+            cout << "No item found matching the search criteria." << endl;
     }
 };
 
@@ -265,6 +309,7 @@ int main()
         cout << "2. Remove Item" << endl;
         cout << "3. Display All Items" << endl;
         cout << "4. Update Item" << endl;
+        cout << "5. Search Item" << endl;
         cout << "0. Exit" << endl;
         cout << "Enter choice: ";
         cin >> choice;
@@ -292,6 +337,9 @@ int main()
             case 4:
                 registry.updateItem();
                 break;
+            case 5:
+                registry.searchItem();
+                break;
             case 0:
                 cout << "Exiting..." << endl;
                 break;
@@ -303,4 +351,4 @@ int main()
     } while (choice != 0);
 
     return 0;
-} 
+}
