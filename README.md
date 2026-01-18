@@ -57,9 +57,10 @@ It allows users to manage lost items by adding, removing, updating, searching, a
 ## 📂 Folder Structure
 ```plaintext
 FindNest/
+├── screenshots/
 ├── README.md
 ├── Project-Documents/
-├── FindNest.cpp
+├── findnest.cpp
 ```
 ---
 ## 🚀 How to Run
