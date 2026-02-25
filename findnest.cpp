@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <cctype>
-#include <fstream> 
+#include <fstream>
 using namespace std;
 
 class Item
@@ -12,24 +12,39 @@ private:
     string name;
     string category;
     string foundLocation;
+    string reporterName;    
+    string reporterContact; 
 
 public:
-    Item(int i, string n, string c, string f)
-        : id(i), name(n), category(c), foundLocation(f) {}
+    Item(int i, string n, string c, string f, string rName, string rContact)
+        : id(i), name(n), category(c), foundLocation(f),
+          reporterName(rName), reporterContact(rContact) {}
 
-    Item() : id(0), name(""), category(""), foundLocation("") {}
+    Item() : id(0), name(""), category(""), foundLocation(""),
+             reporterName(""), reporterContact("") {}
 
     int getId() const { 
         return id; 
     }
+
     string getName() const { 
         return name; 
     }
+
     string getCategory() const { 
         return category; 
     }
+
     string getFoundLocation() const { 
         return foundLocation; 
+    }
+
+    string getReporterName() const { 
+        return reporterName; 
+    }
+
+    string getReporterContact() const { 
+        return reporterContact; 
     }
 
     bool operator<(const Item &other) const
@@ -43,18 +58,14 @@ class LostFoundRegistry
 private:
     vector<Item> items;
 
-    // Checks whether the given ID already exists
     bool idExists(int id) const
     {
         for (int i = 0; i < items.size(); i++)
-        {
             if (items[i].getId() == id)
                 return true;
-        }
         return false;
     }
 
-    // Merge function for merge sort
     void merge(vector<Item> &arr, int left, int mid, int right)
     {
         int n1 = mid - left + 1;
@@ -76,13 +87,10 @@ private:
                 arr[k++] = rightArr[j++];
         }
 
-        while (i < n1)
-            arr[k++] = leftArr[i++];
-        while (j < n2)
-            arr[k++] = rightArr[j++];
+        while (i < n1) arr[k++] = leftArr[i++];
+        while (j < n2) arr[k++] = rightArr[j++];
     }
 
-    // Recursive merge sort
     void mergeSort(vector<Item> &arr, int left, int right)
     {
         if (left < right)
@@ -95,17 +103,16 @@ private:
     }
 
 public:
-    // Adds a new item and prevents duplicate ID entry
     void addItem()
     {
         int id;
         string name, category, foundLocation;
+        string reporterName, reporterContact;
 
         while (true)
         {
             cout << "Enter ID: ";
             cin >> id;
-
             if (cin.fail())
             {
                 cin.clear();
@@ -113,13 +120,11 @@ public:
                 cout << "Invalid input. Enter numeric ID.\n";
                 continue;
             }
-
             if (idExists(id))
             {
                 cout << "ID already exists. Please enter a different ID.\n";
                 continue;
             }
-
             cin.ignore(100, '\n');
             break;
         }
@@ -133,11 +138,16 @@ public:
         cout << "Enter Found Location: ";
         getline(cin, foundLocation);
 
-        items.push_back(Item(id, name, category, foundLocation));
+        cout << "Enter Reporter Name: ";
+        getline(cin, reporterName);
+
+        cout << "Enter Reporter Contact: ";
+        getline(cin, reporterContact);
+
+        items.push_back(Item(id, name, category, foundLocation, reporterName, reporterContact));
         cout << "Item added successfully!\n";
     }
 
-    // Removes an item using its ID
     void removeItem()
     {
         int id;
@@ -157,7 +167,6 @@ public:
         cout << "No item found with this ID.\n";
     }
 
-    // Updates item details except ID
     void updateItem()
     {
         int id;
@@ -170,6 +179,7 @@ public:
             if (items[i].getId() == id)
             {
                 string name, category, foundLocation;
+                string reporterName, reporterContact;
 
                 cout << "Enter New Name: ";
                 getline(cin, name);
@@ -180,7 +190,13 @@ public:
                 cout << "Enter New Found Location: ";
                 getline(cin, foundLocation);
 
-                items[i] = Item(id, name, category, foundLocation);
+                cout << "Enter New Reporter Name: ";
+                getline(cin, reporterName);
+
+                cout << "Enter New Reporter Contact: ";
+                getline(cin, reporterContact);
+
+                items[i] = Item(id, name, category, foundLocation, reporterName, reporterContact);
                 cout << "Item updated successfully!\n";
                 return;
             }
@@ -188,7 +204,6 @@ public:
         cout << "No item found with this ID.\n";
     }
 
-    // Displays all items grouped by category
     void displayAll()
     {
         if (items.empty())
@@ -210,9 +225,7 @@ public:
             if (sortedItems[i].getCategory() != currentCategory)
             {
                 if (categoryCount > 0)
-                {
                     cout << "Total items in this category: " << categoryCount << "\n";
-                }
 
                 currentCategory = sortedItems[i].getCategory();
                 cout << "\nCategory: " << currentCategory << "\n";
@@ -221,7 +234,9 @@ public:
 
             cout << "ID: " << sortedItems[i].getId()
                  << " | Name: " << sortedItems[i].getName()
-                 << " | Found Location: " << sortedItems[i].getFoundLocation() << "\n";
+                 << " | Found Location: " << sortedItems[i].getFoundLocation()
+                 << " | Reporter: " << sortedItems[i].getReporterName()
+                 << " | Contact: " << sortedItems[i].getReporterContact() << "\n";
 
             categoryCount++;
         }
@@ -230,7 +245,6 @@ public:
             cout << "Total items in this category: " << categoryCount << "\n";
     }
 
-    // Searches item by ID or Name using Linear Search
     void searchItem()
     {
         string input;
@@ -239,18 +253,16 @@ public:
         cout << "Enter Item ID or Name to search: ";
         getline(cin, input);
 
-        // Check whether input is numeric (ID)
         bool isNumber = true;
-        for (char c : input)
+        for (int i = 0; i < input.size(); i++)
         {
-            if (!isdigit(c))
+            if (!isdigit(input[i]))
             {
                 isNumber = false;
                 break;
             }
         }
 
-        // Linear search by ID
         if (isNumber)
         {
             int id = stoi(input);
@@ -263,12 +275,13 @@ public:
                     cout << "ID: " << items[i].getId()
                          << " | Name: " << items[i].getName()
                          << " | Category: " << items[i].getCategory()
-                         << " | Found Location: " << items[i].getFoundLocation() << "\n";
+                         << " | Found Location: " << items[i].getFoundLocation()
+                         << " | Reporter: " << items[i].getReporterName()
+                         << " | Contact: " << items[i].getReporterContact() << "\n";
                     break;
                 }
             }
         }
-        // Linear search by Name
         else
         {
             for (int i = 0; i < items.size(); i++)
@@ -280,7 +293,9 @@ public:
                     cout << "ID: " << items[i].getId()
                          << " | Name: " << items[i].getName()
                          << " | Category: " << items[i].getCategory()
-                         << " | Found Location: " << items[i].getFoundLocation() << "\n";
+                         << " | Found Location: " << items[i].getFoundLocation()
+                         << " | Reporter: " << items[i].getReporterName()
+                         << " | Contact: " << items[i].getReporterContact() << "\n";
                 }
             }
         }
@@ -289,7 +304,6 @@ public:
             cout << "No item found matching the search criteria.\n";
     }
 
-    // Saves all items to a file grouped by category
     void saveToFileByCategory()
     {
         if (items.empty())
@@ -298,7 +312,7 @@ public:
             return;
         }
 
-        ofstream outFile("lostfound-data.txt"); // Open file for writing
+        ofstream outFile("lostfound-data.txt");
         if (!outFile)
         {
             cout << "Error opening file for saving!\n";
@@ -327,7 +341,9 @@ public:
 
             outFile << "ID: " << sortedItems[i].getId()
                     << " | Name: " << sortedItems[i].getName()
-                    << " | Found Location: " << sortedItems[i].getFoundLocation() << "\n";
+                    << " | Found Location: " << sortedItems[i].getFoundLocation()
+                    << " | Reporter: " << sortedItems[i].getReporterName()
+                    << " | Contact: " << sortedItems[i].getReporterContact() << "\n";
 
             categoryCount++;
         }
