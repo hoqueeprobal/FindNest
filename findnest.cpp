@@ -12,8 +12,8 @@ private:
     string name;
     string category;
     string foundLocation;
-    string reporterName;    
-    string reporterContact; 
+    string reporterName;
+    string reporterContact;
 
 public:
     Item(int i, string n, string c, string f, string rName, string rContact)
@@ -57,6 +57,7 @@ class LostFoundRegistry
 {
 private:
     vector<Item> items;
+    vector<string> auditLog; 
 
     bool idExists(int id) const
     {
@@ -145,6 +146,7 @@ public:
         getline(cin, reporterContact);
 
         items.push_back(Item(id, name, category, foundLocation, reporterName, reporterContact));
+        auditLog.push_back("ADD    - ID: " + to_string(id) + ", Name: " + name); // Log add
         cout << "Item added successfully!\n";
     }
 
@@ -159,6 +161,7 @@ public:
         {
             if (items[i].getId() == id)
             {
+                auditLog.push_back("REMOVE - ID: " + to_string(items[i].getId()) + ", Name: " + items[i].getName()); // Log remove
                 items.erase(items.begin() + i);
                 cout << "Item removed successfully!\n";
                 return;
@@ -196,6 +199,7 @@ public:
                 cout << "Enter New Reporter Contact: ";
                 getline(cin, reporterContact);
 
+                auditLog.push_back("UPDATE - ID: " + to_string(id) + ", Name: " + name); // Log update
                 items[i] = Item(id, name, category, foundLocation, reporterName, reporterContact);
                 cout << "Item updated successfully!\n";
                 return;
@@ -304,6 +308,21 @@ public:
             cout << "No item found matching the search criteria.\n";
     }
 
+    void auditLogDisplay()
+    {
+        if (auditLog.empty())
+        {
+            cout << "No actions performed yet.\n";
+            return;
+        }
+
+        cout << "\n--- Audit Log ---\n";
+        for (int i = 0; i < auditLog.size(); i++)
+        {
+            cout << auditLog[i] << "\n";
+        }
+    }
+
     void saveToFileByCategory()
     {
         if (items.empty())
@@ -369,6 +388,7 @@ int main()
         cout << "3. Display All Items\n";
         cout << "4. Update Item\n";
         cout << "5. Search Item\n";
+        cout << "6. Audit Log\n";
         cout << "0. Exit\n";
         cout << "Enter choice: ";
 
@@ -391,6 +411,9 @@ int main()
             break;
         case 5:
             registry.searchItem();
+            break;
+        case 6:
+            registry.auditLogDisplay();
             break;
         case 0:
             registry.saveToFileByCategory();
