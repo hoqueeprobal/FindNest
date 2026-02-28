@@ -23,29 +23,12 @@ public:
     Item() : id(0), name(""), category(""), foundLocation(""),
              reporterName(""), reporterContact("") {}
 
-    int getId() const { 
-        return id; 
-    }
-
-    string getName() const { 
-        return name; 
-    }
-
-    string getCategory() const { 
-        return category; 
-    }
-
-    string getFoundLocation() const { 
-        return foundLocation; 
-    }
-
-    string getReporterName() const { 
-        return reporterName; 
-    }
-
-    string getReporterContact() const { 
-        return reporterContact; 
-    }
+    int getId() const { return id; }
+    string getName() const { return name; }
+    string getCategory() const { return category; }
+    string getFoundLocation() const { return foundLocation; }
+    string getReporterName() const { return reporterName; }
+    string getReporterContact() const { return reporterContact; }
 
     bool operator<(const Item &other) const
     {
@@ -57,7 +40,7 @@ class LostFoundRegistry
 {
 private:
     vector<Item> items;
-    vector<string> auditLog; 
+    vector<string> auditLog; // audit log
 
     bool idExists(int id) const
     {
@@ -146,8 +129,15 @@ public:
         getline(cin, reporterContact);
 
         items.push_back(Item(id, name, category, foundLocation, reporterName, reporterContact));
-        auditLog.push_back("ADD    - ID: " + to_string(id) + ", Name: " + name); // Log add
         cout << "Item added successfully!\n";
+
+        // audit log
+        auditLog.push_back("ADD - ID: " + to_string(id) +
+                           " || Name: " + name +
+                           " || Category: " + category +
+                           " || Found Location: " + foundLocation +
+                           " || Reporter: " + reporterName +
+                           " || Contact: " + reporterContact);
     }
 
     void removeItem()
@@ -161,9 +151,17 @@ public:
         {
             if (items[i].getId() == id)
             {
-                auditLog.push_back("REMOVE - ID: " + to_string(items[i].getId()) + ", Name: " + items[i].getName()); // Log remove
+                string logEntry = "REMOVE - ID: " + to_string(items[i].getId()) +
+                                  " || Name: " + items[i].getName() +
+                                  " || Category: " + items[i].getCategory() +
+                                  " || Found Location: " + items[i].getFoundLocation() +
+                                  " || Reporter: " + items[i].getReporterName() +
+                                  " || Contact: " + items[i].getReporterContact();
+
                 items.erase(items.begin() + i);
                 cout << "Item removed successfully!\n";
+
+                auditLog.push_back(logEntry);
                 return;
             }
         }
@@ -181,8 +179,7 @@ public:
         {
             if (items[i].getId() == id)
             {
-                string name, category, foundLocation;
-                string reporterName, reporterContact;
+                string name, category, foundLocation, reporterName, reporterContact;
 
                 cout << "Enter New Name: ";
                 getline(cin, name);
@@ -199,7 +196,13 @@ public:
                 cout << "Enter New Reporter Contact: ";
                 getline(cin, reporterContact);
 
-                auditLog.push_back("UPDATE - ID: " + to_string(id) + ", Name: " + name); // Log update
+                auditLog.push_back("UPDATE - ID: " + to_string(id) +
+                                   " || Name: " + name +
+                                   " || Category: " + category +
+                                   " || Found Location: " + foundLocation +
+                                   " || Reporter: " + reporterName +
+                                   " || Contact: " + reporterContact);
+
                 items[i] = Item(id, name, category, foundLocation, reporterName, reporterContact);
                 cout << "Item updated successfully!\n";
                 return;
@@ -308,29 +311,20 @@ public:
             cout << "No item found matching the search criteria.\n";
     }
 
-    void auditLogDisplay()
+    void showAuditLog()
     {
         if (auditLog.empty())
         {
-            cout << "No actions performed yet.\n";
+            cout << "No audit log available.\n";
             return;
         }
-
         cout << "\n--- Audit Log ---\n";
         for (int i = 0; i < auditLog.size(); i++)
-        {
             cout << auditLog[i] << "\n";
-        }
     }
 
     void saveToFileByCategory()
     {
-        if (items.empty())
-        {
-            cout << "No data to save.\n";
-            return;
-        }
-
         ofstream outFile("lostfound-data.txt");
         if (!outFile)
         {
@@ -373,6 +367,14 @@ public:
         outFile.close();
         cout << "All data saved successfully to lostfound-data.txt!\n";
     }
+
+    void saveAuditLog()
+    {
+        ofstream outFile("audit-log.txt"); // overwrite mode
+        for (int i = 0; i < auditLog.size(); i++)
+            outFile << auditLog[i] << "\n";
+        outFile.close();
+    }
 };
 
 int main()
@@ -388,7 +390,7 @@ int main()
         cout << "3. Display All Items\n";
         cout << "4. Update Item\n";
         cout << "5. Search Item\n";
-        cout << "6. Audit Log\n";
+        cout << "6. Show Audit Log\n"; // new option
         cout << "0. Exit\n";
         cout << "Enter choice: ";
 
@@ -413,10 +415,11 @@ int main()
             registry.searchItem();
             break;
         case 6:
-            registry.auditLogDisplay();
+            registry.showAuditLog();
             break;
         case 0:
             registry.saveToFileByCategory();
+            registry.saveAuditLog();
             cout << "Exiting...\n";
             break;
         default:
