@@ -12,15 +12,16 @@ It allows users to manage lost items by adding, removing, updating, searching, a
 - Remove and update items using **Item ID**
 - Display all items **grouped and sorted by category**
 - Search items by **ID or Name**
+- View complete **Audit Log** history of system operations
 
 ### 🔹 Utility Features
 - Menu-driven console interface
 - Prevents duplicate IDs and handles invalid input
 - **Merge Sort** used for category-based sorting
 - **Linear Search** used for searching items
-- Automatically saves data to `lostfound-data.txt` on exit
-
----
+- Records all **ADD, REMOVE and UPDATE** operations
+- Automatically saves **lostfound-data.txt and audit-log.txt**
+- Files are saved automatically when the program exits
 
 ## 🧩 OOP Concepts Used
 
@@ -34,7 +35,7 @@ It allows users to manage lost items by adding, removing, updating, searching, a
 
 ### 🔹 Abstraction
 - Registry class exposes only **essential public methods**
-- Internal logic (sorting, searching, validation) is hidden
+- Internal logic (sorting, searching, validation, audit logging) is hidden
 
 ### 🔹 Operator Overloading
 - `<` operator is overloaded to compare items by **category**
@@ -72,6 +73,13 @@ FindNest/
       ```bash
    ./FindNest
 
+## 📁 Output Files
+
+When the program exits:
+
+**lostfound-data.txt - Contains all items grouped by category**
+**audit-log.txt - Contains all ADD, REMOVE, and UPDATE records**
+- Files are overwritten each time the program exits
       
 ## 🎉 Acknowledgments
 
